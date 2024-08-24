@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "API-GameStore", "API-GameStore\API-GameStore.csproj", "{03071727-2B3F-4CCB-BBDB-50C4B174BDEB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "API.GameStore", "API.GameStore\API.GameStore.csproj", "{03071727-2B3F-4CCB-BBDB-50C4B174BDEB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
