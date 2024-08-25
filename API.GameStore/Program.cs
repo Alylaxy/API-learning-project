@@ -4,6 +4,9 @@ using API.GameStore.Contracts;
 var builder = WebApplication.CreateBuilder(args);
 var app = builder.Build();
 
+const string buscarJogoEndpoint = "buscarJogo";
+const string criarJogoEndpoint = "criarJogo";
+
 List<JogosDto> jogos =
 [
     new JogosDto(
@@ -32,7 +35,7 @@ List<JogosDto> jogos =
 app.MapGet("/jogos", () => jogos);
 
 app.MapGet("/jogos/{id:guid}", (Guid id) => jogos.FirstOrDefault(j => j.Id == id))
-    .WithName("GetJogoPorId");
+    .WithName(buscarJogoEndpoint);
 
 app.MapGet("/jogos/filtrar", (string? nome, string? genero, decimal? preco, DateOnly? dataDeLancamento) =>
 {
@@ -66,8 +69,8 @@ app.MapPost("/jogos", (CriarJogoDto novoGame) =>
 {
     var jogo = new JogosDto(Guid.NewGuid(), novoGame.Nome, novoGame.Genero, novoGame.Preco, novoGame.DataDeLancamento);
     jogos.Add(jogo);
-    return Results.Created($"/jogos/{jogo.Id}", jogo);
-});
+    return Results.CreatedAtRoute(buscarJogoEndpoint, new {id = jogo.Id}, jogo);
+}).WithName(criarJogoEndpoint);
 
 app.MapPut("/jogos/{id:guid}", (Guid id, CriarJogoDto jogoAtualizado) =>
 {
