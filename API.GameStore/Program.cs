@@ -72,19 +72,17 @@ app.MapPost("/jogos", (CriarJogoDto novoGame) =>
     return Results.CreatedAtRoute(buscarJogoEndpoint, new {id = jogo.Id}, jogo);
 }).WithName(criarJogoEndpoint);
 
-app.MapPut("/jogos/{id:guid}", (Guid id, CriarJogoDto jogoAtualizado) =>
+app.MapPut("/jogos/{id:guid}", (Guid id, AtualizardJogoDto jogoAtualizado) =>
 {
-    var jogo = jogos.FirstOrDefault(j => j.Id == id);
+    var index = jogos.FindIndex(j => j.Id == id);
 
-    if (jogo is null)
+    if (index == -1)
     {
         return Results.NotFound();
     }
+    jogos[index] = new JogosDto(id, jogoAtualizado.Nome, jogoAtualizado.Genero, jogoAtualizado.Preco, jogoAtualizado.DataDeLancamento);
 
-    var jogoAtualizadoDto = new JogosDto(id, jogoAtualizado.Nome, jogoAtualizado.Genero, jogoAtualizado.Preco, jogoAtualizado.DataDeLancamento);
-    jogos[jogos.IndexOf(jogo)] = jogoAtualizadoDto;
-
-    return Results.Ok(jogoAtualizadoDto);
+    return Results.Ok(jogoAtualizado);
 });
 
 app.Run();
