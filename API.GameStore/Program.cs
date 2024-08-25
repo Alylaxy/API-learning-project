@@ -69,4 +69,19 @@ app.MapPost("/jogos", (CriarJogoDto novoGame) =>
     return Results.Created($"/jogos/{jogo.Id}", jogo);
 });
 
+app.MapPut("/jogos/{id:guid}", (Guid id, CriarJogoDto jogoAtualizado) =>
+{
+    var jogo = jogos.FirstOrDefault(j => j.Id == id);
+
+    if (jogo is null)
+    {
+        return Results.NotFound();
+    }
+
+    var jogoAtualizadoDto = new JogosDto(id, jogoAtualizado.Nome, jogoAtualizado.Genero, jogoAtualizado.Preco, jogoAtualizado.DataDeLancamento);
+    jogos[jogos.IndexOf(jogo)] = jogoAtualizadoDto;
+
+    return Results.Ok(jogoAtualizadoDto);
+});
+
 app.Run();
