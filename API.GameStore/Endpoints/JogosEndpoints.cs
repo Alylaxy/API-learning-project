@@ -36,17 +36,17 @@ public static class JogosEndpoints
 
     public static RouteGroupBuilder MapearEndpoints(this WebApplication app)
     {
-        var grupo = app.MapGroup("jogos");
+        var grupoJogos = app.MapGroup("jogos").WithParameterValidation();
         
         // GET /jogos
-        grupo.MapGet("/", () => Jogos);
+        grupoJogos.MapGet("/", () => Jogos);
 
         // GET /jogos/{id}
-        grupo.MapGet("/{id:guid}", (Guid id) => Jogos.FirstOrDefault(j => j.Id == id))
+        grupoJogos.MapGet("/{id:guid}", (Guid id) => Jogos.FirstOrDefault(j => j.Id == id))
             .WithName(BuscarJogoEndpoint);
 
         // GET /jogos/filtrar
-        grupo.MapGet("/filtrar", (string? nome, string? genero, decimal? preco, DateOnly? dataDeLancamento) =>
+        grupoJogos.MapGet("/filtrar", (string? nome, string? genero, decimal? preco, DateOnly? dataDeLancamento) =>
         {
             var jogosFiltrados = Jogos.AsQueryable();
 
@@ -76,7 +76,7 @@ public static class JogosEndpoints
 
         
         //POST /jogos
-        grupo.MapPost("/", (CriarJogoDto novoGame) =>
+        grupoJogos.MapPost("/", (CriarJogoDto novoGame) =>
         {
             var jogo = new JogosDto(Guid.NewGuid(), novoGame.Nome, novoGame.Genero, novoGame.Preco, novoGame.DataDeLancamento);
             Jogos.Add(jogo);
@@ -84,7 +84,7 @@ public static class JogosEndpoints
         }).WithName(CriarJogoEndpoint);
 
         //PUT /jogos/{id}
-        grupo.MapPut("/{id:guid}", (Guid id, AtualizardJogoDto jogoAtualizado) =>
+        grupoJogos.MapPut("/{id:guid}", (Guid id, AtualizardJogoDto jogoAtualizado) =>
         {
             var index = Jogos.FindIndex(j => j.Id == id);
 
@@ -98,7 +98,7 @@ public static class JogosEndpoints
         }).WithName(AtualizarJogoEndpoint);
 
         //DELETE /jogos/{id}
-        grupo.MapDelete("/{id:guid}", (Guid id) =>
+        grupoJogos.MapDelete("/{id:guid}", (Guid id) =>
         {
             var jogo = Jogos.FirstOrDefault(j => j.Id == id);
             if (jogo is null)
@@ -111,12 +111,12 @@ public static class JogosEndpoints
         });
         
         //DELETE /jogos/limpeza
-        grupo.MapDelete("/limpeza", () =>
+        grupoJogos.MapDelete("/limpeza", () =>
         {
             Jogos.Clear();
             return Results.NoContent();
         });
 
-        return grupo;
+        return grupoJogos;
     }
 }
